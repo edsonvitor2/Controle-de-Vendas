@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="cadastro.css">
+    <title>Cadastro</title>
+</head>
+<body>
+    <h1>Estoque</h1>
+
+    <form action="" class="form-cadastro">
+        <fieldset>
+            <legend id="legend">Cadastrar Produtos</legend>
+            <label for="Produto" >Produto</label>
+            <input type="text" id="produto">
+
+            <label for="quantidade">Quantidade</label>
+            <input type="text" id="quantidade">
+
+            <label for="valor">Valor</label>
+            <input type="text" id="valor">
+
+            <input type="submit" id="cadastrar" value="Cadastrar">
+        </fieldset>
+    </form>
+
+    <h2>Lista de Produtos</h2>
+    <table>
+        <thead>
+            <th>
+                Produtos
+            </th>
+            <th>
+                Quantidade
+            </th>
+            <th>
+                Valor
+            </th>
+        </thead>
+        <tbody id="corpo-tabela-estoque">
+
+        </tbody>
+    </table>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script src="firebaseInit.js"></script>
+
+    <script src="cadastro.js"></script>
+</body>
+</html>

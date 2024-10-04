@@ -1,0 +1,51 @@
+.form-cadastro{
+    width: 15%;
+}
+label{
+    margin: 5px;
+}
+.form-cadastro input{
+    width: 90%;
+    margin: 5px;
+}
+.cadastar {
+    width: 10%;
+}
+
+table{
+    margin-left: 10% ;
+    width: 80%;
+    border: solid 1.5px;
+    text-align: center;
+    padding: 10px;
+}
+
+table td{
+    border: solid 1px;
+}
+
+table td.botoes:hover{
+    cursor: pointer;
+    background-color: black;
+    color: #fff;
+}
+
+@media (max-width: 400px) {
+    .form-cadastro {
+        width: 100%; 
+        padding: 10px;
+    }
+
+    .form-cadastro input {
+        width: 96%; /* Faz os inputs ocuparem toda a largura disponível */
+    }
+
+    table {
+        width: 100%; /* Faz a tabela ocupar toda a largura da tela */
+        margin-left: 0; /* Remove a margem esquerda */
+    }
+
+    table td {
+        padding: 5px; /* Ajusta o padding para dar mais espaço entre o texto e as bordas */
+    }
+}
