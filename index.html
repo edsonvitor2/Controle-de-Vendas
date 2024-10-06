@@ -3,9 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="cadastro.css">
+    <title>Cadastro</title>
 </head>
+
+<header>
+
+</header>
 <body>
+    <h2>Controle de Vendas</h2>
+    <div>
+        <form action="" class="form-cadastro">
+            <fieldset>
+                <legend id="legend">Cadastrar Produtos</legend>
+                <label for="Produto" >Produto</label>
+                <input type="text" id="produto">
     
+                <label for="quantidade">Quantidade</label>
+                <input type="text" id="quantidade">
+    
+                <label for="valor">Valor</label>
+                <input type="text" id="valor">
+    
+                <input type="submit" id="cadastrar" value="Cadastrar">
+            </fieldset>
+        </form>
+    </div>
+
+    <form action="" class="form-venda">
+        <fieldset>
+            <legend id="legend">Vender Produtos</legend>
+            <label for="Produto" >Produto</label>
+            <input type="text" id="venda-produto">
+
+            <label for="quantidade">Quantidade</label>
+            <input type="text" id="venda-quantidade">
+
+            <label for="valor">Valor</label>
+            <input type="text" id="venda-valor">
+
+            <input type="submit" id="Vender" value="Vender">
+        </fieldset>
+    </form>
+
+        <h3 id="relatorio-produtos">Produtos</h3>
+        <h3 id="relatorio-vendas">Vendas</h3>
+
+        <div id="tabela-estoque">
+
+            <table class="tabela-estoque" >
+                <thead>
+                    <th>
+                        Produtos
+                    </th>
+                    <th>
+                        Qtd
+                    </th>
+                    <th>
+                        Valor
+                    </th>
+                    <th>
+                        Editar
+                    </th>
+                    <th>
+                        ADD
+                    </th>
+                    <th>
+                        Excluir
+                    </th>
+                    <th>
+                        Vender
+                    </th>
+                </thead>
+                <tbody id="corpo-tabela-estoque">
+        
+                </tbody>
+            </table>
+        </div>
+        
+    <div id="tabela-vendas">
+        <input type="date" id="data" name="data">
+        
+        <label for="" id="label-vendido">TOTAL VENDIDO HOJE</label>
+        <input type="text" name="" id="total-dia">
+        <button id="buscar-relatorio">Buscar Relatorio</button>
+        
+        <table class="tabela-vendas" >
+            <thead>
+                <th>
+                    Produtos
+                </th>
+                <th>
+                    Qtd
+                </th>
+                <th>
+                    Valor
+                </th>
+                <th>
+                    Data
+                </th>
+                <th>
+                    Hora
+                </th>
+            </thead>
+            <tbody id="corpo-tabela-vendas">
+    
+            </tbody>
+        </table>
+    </div> 
+        
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <script src="firebaseInit.js"></script>
+
+    <script src="cadastro.js"></script>
 </body>
 </html>

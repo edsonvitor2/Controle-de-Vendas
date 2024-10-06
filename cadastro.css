@@ -1,51 +1,156 @@
-.form-cadastro{
-    width: 15%;
-}
-label{
-    margin: 5px;
-}
-.form-cadastro input{
-    width: 90%;
-    margin: 5px;
-}
-.cadastar {
-    width: 10%;
-}
-
-table{
-    margin-left: 10% ;
-    width: 80%;
-    border: solid 1.5px;
-    text-align: center;
-    padding: 10px;
-}
-
-table td{
-    border: solid 1px;
-}
-
-table td.botoes:hover{
-    cursor: pointer;
-    background-color: black;
+/* Estilização geral */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #000000;
+    margin: 0;
+    padding: 20px;
     color: #fff;
 }
 
-@media (max-width: 400px) {
-    .form-cadastro {
-        width: 100%; 
+h3 {
+    cursor: pointer;
+    color: #fff;
+    padding: 10px;
+    margin: 0;
+    transition: background-color 0.3s ease;
+    width: 16%;
+    float: left;
+    margin-right: 30%;
+    margin-bottom: 30px;
+}
+
+h3:hover {
+    background-color: #444242;
+}
+
+/* Formulários */
+form {
+    background-color: #1f1d1d;
+    border: 1px solid #444242;
+    color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+form fieldset {
+    border: none;
+    padding: 0;
+}
+
+form legend {
+    font-size: 1.2em;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="text"], input[type="number"] {
+    width: calc(100% - 22px);
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #5c5353;
+    color: white;
+}
+
+input[type="submit"],button {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #218838;
+}
+
+/* Tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-left: -20px;
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+    width: 25%;
+}
+
+table thead {
+    background-color: #28a745;
+    color: white;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #181717;
+}
+
+table tbody tr:hover {
+    background-color: #5c5353;
+}
+
+/* Seção de Venda inicialmente invisível */
+.form-venda {
+    display: none;
+}
+
+#data{
+    float: left;
+    margin: 10px;
+}
+#label-vendido{
+    float: left;
+    margin: 10px;
+}
+#total-dia{
+    width: 10%;
+}
+/* Responsividade */
+@media (max-width: 600px) {
+    input[type="text"], input[type="number"] {
+        width: calc(100% - 12px);
+    }
+
+    #data{
+        margin: -10px;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+    #label-vendido{
+        margin: 10px;
+        margin-left: -10px;
+    }
+    #total-dia{
+        width: 40%;
+    }
+
+    h3 {
+        cursor: pointer;
+        color: #fff;
         padding: 10px;
-    }
-
-    .form-cadastro input {
-        width: 96%; /* Faz os inputs ocuparem toda a largura disponível */
-    }
-
-    table {
-        width: 100%; /* Faz a tabela ocupar toda a largura da tela */
-        margin-left: 0; /* Remove a margem esquerda */
-    }
-
-    table td {
-        padding: 5px; /* Ajusta o padding para dar mais espaço entre o texto e as bordas */
+        margin: -20px;
+        transition: background-color 0.3s ease;
+        width: 22%;
+        margin-right: 18%;
+        margin-left: 5px;
+        margin-bottom: 30px;
+        margin-top: 1px;
+        float: left;
+        background-color: #218838;
+        border-radius: 5px;
     }
 }

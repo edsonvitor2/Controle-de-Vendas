@@ -2,18 +2,134 @@ class Cadastro {
     constructor(){
         this.formOpcao = 'cadastrar';
         this.produtoId = null; // Para armazenar o ID do produto que está sendo editado
+        this.valor = null;
         this.iniciarBotoes();   // Inicializa os botões
         this.listarProdutos();  // Lista os produtos existentes ao iniciar
+        this.listarVendas();
     }
 
     iniciarBotoes(){
+        document.querySelector("#tabela-vendas").style.display = 'none';
         let cadastrar = document.querySelector("#cadastrar");
+        let vender = document.querySelector("#Vender");
+        let quantidadeVendas = document.querySelector("#venda-quantidade");
+        let buscarRelatorioVendas = document.querySelector("#buscar-relatorio");
+
+        buscarRelatorioVendas.addEventListener("click", e => {
+            e.preventDefault();
+           
+            let data = document.querySelector("#data").value;
+            let partesData = data.split("-");
+            let dataFormatada = `${partesData[2]}/${partesData[1]}/${partesData[0]}`;
+            
+            this.listarVendas(dataFormatada);
+        });
+
+        quantidadeVendas.addEventListener("keyup", e => {
+            this.valor
+            var quantidade = document.querySelector("#venda-quantidade").value;
+            let qtd = parseFloat(quantidade);
+            let valor = parseFloat(this.valor);
+            var result = valor * qtd;
+            
+            document.querySelector("#venda-valor").value = result;
+        });
 
         cadastrar.addEventListener("click", e => {
             e.preventDefault();
             this.obterProdutos();
         });
+
+        vender.addEventListener("click", e => {
+            e.preventDefault();
+            this.venderProduto();
+        });
+
+        document.querySelector("#relatorio-produtos").addEventListener("click",e =>{
+            this.ocultarRelatorioVendas();
+        });
+
+        document.querySelector("#relatorio-vendas").addEventListener("click",e =>{
+           this.mostrarRelatorioVendas();
+        });
+
     }
+    ocultarRelatorioVendas(){
+        const tabelaVendas = document.querySelector("#tabela-vendas");
+        const tabelaProdutos = document.querySelector("#tabela-estoque");
+
+        tabelaProdutos.style.display = 'block';
+        tabelaVendas.style.display = 'none';
+    }
+    mostrarRelatorioVendas(){
+        const tabelaVendas = document.querySelector("#tabela-vendas");
+        const tabelaProdutos = document.querySelector("#tabela-estoque");
+        
+        tabelaProdutos.style.display = 'none';
+        tabelaVendas.style.display = 'block';
+    }
+    venderProduto(){
+        var nome = document.querySelector("#venda-produto").value; 
+        var quantidadeVendida = parseInt(document.querySelector("#venda-quantidade").value); 
+        var valor = document.querySelector("#venda-valor").value.trim(); 
+        var dataAtual = new Date();
+        var data = dataAtual.toLocaleDateString('pt-BR');
+        var hora = dataAtual.toLocaleTimeString('pt-BR');
+        
+        var Produto = {
+            nome,
+            quantidade: quantidadeVendida,
+            valor,
+            data,
+            hora
+        };
+    
+        firebase.database().ref('vendas').push(Produto, error => {
+            if (error) {
+                console.error("Erro ao vender o produto no Firebase:", error);
+            } else {
+                console.log("Produto vendido com sucesso no Firebase:", Produto);
+                
+                // Agora subtraímos a quantidade do produto correspondente na chave 'produtos'
+                var produtoRef = firebase.database().ref('produtos').orderByChild('nome').equalTo(nome);
+                
+                produtoRef.once('value', snapshot => {
+                    if (snapshot.exists()) {
+                        snapshot.forEach(childSnapshot => {
+                            var produtoKey = childSnapshot.key; // Chave do produto no Firebase
+                            var produtoData = childSnapshot.val(); // Dados do produto
+    
+                            var quantidadeAtual = parseInt(produtoData.quantidade);
+                            var novaQuantidade = quantidadeAtual - quantidadeVendida;
+    
+                            if (novaQuantidade < 0) {
+                                console.warn("A quantidade vendida excede o estoque disponível.");
+                                return;
+                            }
+    
+                            // Atualizar a quantidade do produto no Firebase
+                            firebase.database().ref('produtos').child(produtoKey).update({
+                                quantidade: novaQuantidade
+                            }, error => {
+                                if (error) {
+                                    console.error("Erro ao atualizar a quantidade do produto no Firebase:", error);
+                                } else {
+                                    console.log("Quantidade do produto atualizada com sucesso no Firebase.");
+                                }
+                            });
+                        });
+                    } else {
+                        console.warn("Produto não encontrado na chave 'produtos'.");
+                    }
+                });
+    
+                this.limparFormulario();
+                this.listarProdutos();
+                this.listarVendas();
+            }
+        });
+    }
+    
 
     obterProdutos() {
         var nome = document.querySelector("#produto").value; 
@@ -119,8 +235,8 @@ class Cadastro {
     listarProdutos() {
         document.querySelector("#legend").innerHTML = `Cadastrar Produtos`;
         document.querySelector("#cadastrar").value = `Cadastrar`;
-
-        let tabelaProdutos = document.querySelector("#corpo-tabela-estoque"); 
+    
+        let tabelaProdutos = document.querySelector("#corpo-tabela-estoque");
         tabelaProdutos.innerHTML = "";  
     
         firebase.database().ref('produtos').once('value', snapshot => {
@@ -128,19 +244,31 @@ class Cadastro {
                 snapshot.forEach(childSnapshot => {
                     const produto = childSnapshot.val();
                     const tr = document.createElement("tr"); 
-
+                   
                     tr.innerHTML = `
                         <td>${produto.nome}</td>
                         <td>${produto.quantidade}</td>
                         <td>R$ ${produto.valor}</td>
                         <td class="editar botoes"> Editar </td>
-                        <td class="adicionar botoes"> Adicionar </td>
+                        <td class="adicionar botoes"> ADD </td>
                         <td class="excluir botoes"> Excluir </td>
+                        <td class="venda botoes"> Vender </td>
                     `;
-    
+        
                     // Adiciona o ID do produto na linha
                     tr.dataset.id = childSnapshot.key;
-
+    
+                    tr.querySelector(".venda").addEventListener("click", e => {
+                        this.produtoId = tr.dataset.id; // Armazena o ID do produto
+                        document.querySelector("#venda-produto").value = produto.nome;
+                        document.querySelector("#venda-quantidade").value = 1;
+                        this.valor = produto.valor;
+                        document.querySelector("#venda-valor").value = produto.valor;
+    
+                        document.querySelector(".form-venda").style.display = 'block';
+                        document.querySelector(".form-cadastro").style.display = 'none';
+                    });
+    
                     // Adiciona o evento de clique para o botão Editar
                     tr.querySelector(".editar").addEventListener("click", e => {
                         this.produtoId = tr.dataset.id; // Armazena o ID do produto
@@ -151,7 +279,7 @@ class Cadastro {
                         document.querySelector("#quantidade").value = produto.quantidade;
                         document.querySelector("#valor").value = produto.valor;
                     });
-    
+        
                     // Adiciona o evento de clique para o botão Adicionar
                     tr.querySelector(".adicionar").addEventListener("click", e => {
                         this.produtoId = tr.dataset.id; // Armazena o ID do produto
@@ -162,7 +290,7 @@ class Cadastro {
                         document.querySelector("#valor").value = produto.valor;
                         this.formOpcao = 'adicionar'; // Define a opção como adicionar
                     });
-    
+        
                     // Adiciona o evento de clique para o botão Excluir
                     tr.querySelector(".excluir").addEventListener("click", e => {
                         this.produtoId = tr.dataset.id; // Armazena o ID do produto
@@ -170,10 +298,51 @@ class Cadastro {
                             this.excluirProduto();
                         }
                     });
-    
+                    
                     tabelaProdutos.appendChild(tr);  
                 });
             } 
+        });
+    }
+    
+
+    listarVendas(data) {
+        if(data == undefined){
+            var dataAtual = new Date();
+            var date = dataAtual.toLocaleDateString('pt-BR');
+            data = date;
+        }
+
+        let tabelaVendas = document.querySelector("#corpo-tabela-vendas"); 
+        tabelaVendas.innerHTML = "";  
+    
+        let valorTotal = 0; // Iniciar o valor total como 0
+
+        firebase.database().ref('vendas').once('value', snapshot => {
+            if (snapshot.exists()) {
+                snapshot.forEach(childSnapshot => {
+                    const produto = childSnapshot.val();
+                    const tr = document.createElement("tr"); 
+                    
+                    if(data == produto.data){
+                        valorTotal += parseFloat(produto.valor); // Somar o valor do produto ao total
+                        console.log(valorTotal);
+
+                        tr.innerHTML = `
+                        <td>${produto.nome}</td>
+                        <td>${produto.quantidade}</td>
+                        <td>R$ ${produto.valor}</td>
+                        <td>${produto.data}</td>
+                        <td>${produto.hora}</td>
+                    `;
+                    tabelaVendas.appendChild(tr);  
+                    }
+    
+                    
+                });
+            } 
+            // Define o valor total no campo total-dia
+            document.querySelector("#total-dia").value = `R$ ${valorTotal.toFixed(2)}`; // Mostra o total formatado
         });
     }
 }
